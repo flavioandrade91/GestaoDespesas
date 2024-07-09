@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="manifest" href="manifest.json">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <title>Gestão de Despesas</title>
 
@@ -13,7 +13,13 @@
 
 <body>
     <div class="container mt-5">
-        <h1 class="text-center">Gestão de Despesas</h1>
+        <div class="row justify-content-center">
+            <div class="col-md-6 text-center">
+                <img class="mb-3" src="image/icon192x192.svg" alt="Ícone" id="icon">
+                <h1 class="text-center">Gestão de Despesas</h1>
+            </div>
+        </div>
+
         <hr>
         <div class="row">
             <div class="form-group col-md-6">
@@ -22,7 +28,7 @@
                 <input id="valor" class="form-control mb-4" type="number" placeholder="Valor">
                 <select id="moeda-origem" class="form-control mb-4"></select>
                 <select id="moeda-destino" class="form-control mb-4"></select>
-                <button type="button" class="btn btn-primary" onclick="adicionarDespesa()">Adicionar</button>
+                <button type="button" class="btn btn-success" onclick="adicionarDespesa()">Adicionar</button>
             </div>
             <div class="col-md-6">
                 <div class="full-box p-3">
@@ -53,6 +59,26 @@
                 <!-- Tabela de despesas -->
             </tbody>
         </table>
+
+      <!-- Modal -->
+      <div class="modal fade" id="validationModal" tabindex="-1" aria-labelledby="validationModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <img src="image/icon192x192.svg" alt="Ícone" id="modal-icon" class="me-auto">
+                    <h5 class="modal-title" id="validationModalLabel">Validação de Campos</h5>
+                    <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">X</button> -->
+                </div>
+                <div class="modal-body text-center">
+                    Todos os campos são obrigatórios.
+                </div>
+                <!-- <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                </div> -->
+            </div>
+        </div>
+    </div>
+
     </div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
