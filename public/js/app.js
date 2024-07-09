@@ -1,7 +1,8 @@
+let rowToDelete;
 document.addEventListener('DOMContentLoaded', function () {
     const inputs = document.querySelectorAll('#descricao, #quantidade, #valor, #moeda-origem, #moeda-destino');
     const output = document.getElementById('output');
-
+    
     inputs.forEach(input => {
         input.addEventListener('input', updateOutput);
     });
@@ -30,6 +31,13 @@ document.addEventListener('DOMContentLoaded', function () {
             <p><strong>Valor Convertido:</strong> ${formatarMoeda(valorConvertido, moedaDestino)}</p>
         `;
     }
+
+    document.getElementById('confirmDeleteButton').addEventListener('click', function() {
+        if (rowToDelete) {
+            rowToDelete.remove();
+            $('#deleteConfirmationModal').modal('hide');
+        }
+    });
 });
 
 async function fetchMoedas() {
@@ -66,8 +74,7 @@ async function adicionarDespesa() {
     // Validação dos campos
     if (!descricao || !quantidade || !valor || !moedaOrigem || !moedaDestino) {
         // Exibir modal do Bootstrap
-        const validationModal = new bootstrap.Modal(document.getElementById('validationModal'));
-        validationModal.show();
+        $('#validationModal').modal('show');
         return;
     }
 
@@ -76,6 +83,8 @@ async function adicionarDespesa() {
 
     const expenseTable = document.getElementById('expense-table');
     const row = document.createElement('tr');
+
+    row.dataset.valorOriginal = valor; // Armazenar o valor original no atributo data
 
     row.innerHTML = `
         <td>${descricao}</td>
@@ -86,7 +95,7 @@ async function adicionarDespesa() {
         <td>${formatarMoeda(valorConvertido, moedaDestino)}</td>
         <td>
             <button class="btn btn-warning btn-sm" onclick="editarDespesa(this)">Editar</button>
-            <button class="btn btn-danger btn-sm" onclick="deletarDespesa(this)">Deletar</button>
+            <button class="btn btn-danger btn-sm" onclick="confirmarDelecao(this)">Deletar</button>
         </td>
     `;
 
@@ -100,7 +109,7 @@ async function adicionarDespesa() {
     document.getElementById('moeda-destino').value = '';
 
     // Atualizar a exibição do resumo
-    document.getElementById('output').innerHTML = '<p>Os valores digitados aparecerão aqui.</p>';
+    document.getElementById('output').innerHTML = '<p>Seus dados serão demonstrados aqui.</p>';
 }
 
 async function converterMoeda(valor, moedaOrigem, moedaDestino) {
@@ -119,7 +128,7 @@ function formatarMoeda(valor, moeda) {
     return new Intl.NumberFormat('pt-BR', {
         style: 'currency',
         currency: moeda
-    }).format(valor);
+    }).format(parseFloat(valor));
 }
 
 function editarDespesa(button) {
@@ -128,14 +137,15 @@ function editarDespesa(button) {
 
     document.getElementById('descricao').value = cells[0].innerText;
     document.getElementById('quantidade').value = cells[1].innerText;
-    document.getElementById('valor').value = cells[2].innerText.replace(/[^\d,.-]/g, ''); // Remover símbolo da moeda
+    document.getElementById('valor').value = row.dataset.valorOriginal; // Usar o valor original armazenado
     document.getElementById('moeda-origem').value = cells[3].innerText;
     document.getElementById('moeda-destino').value = cells[4].innerText;
 
     row.remove();
 }
 
-function deletarDespesa(button) {
+function confirmarDelecao(button) {
     const row = button.closest('tr');
-    row.remove();
+    rowToDelete = row; // Armazenar a linha a ser deletada
+    $('#deleteConfirmationModal').modal('show');
 }
